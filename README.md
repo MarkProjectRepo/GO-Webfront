@@ -14,7 +14,7 @@ What it lacks in style, the backend makes up for in functionality.
 ## The Cluster
 ![Screenshot of a gcp dashboard with 2 kubernetes node pools, totalling 4 nodes](https://github.com/MarkProjectRepo/GO-Webfront/blob/master/images/nodes.PNG?raw=true)
 
-The above screenshot displays the resources that are being used; Considering it's relatively light, I only have 4 nodes actively running, but if the demand were to increaes,
+The above screenshot displays the resources that are being used; Considering it's relatively light, I only have 4 nodes actively running, but if the demand were to increase,
 it would scale only up to a maximum of 10 total.
 
 I made heavy use of [Cortex](https://docs.cortex.dev) which allowed me to point it to the clusters and use them as its execution environment. 
