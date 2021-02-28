@@ -26,7 +26,7 @@ And here's a screenshot of Cortex's output for the running service! It's amazing
 
 ![CLI output from Cortex](https://github.com/MarkProjectRepo/GO-Zeroshot/blob/master/images/cortex_output.PNG?raw=true)
 
-Never mind some default names left in place *cough*this project isn't text generation *cough*
+Never mind some default names left in place *cough* this project isn't text generation *cough*
 
 ## Webfront
 
