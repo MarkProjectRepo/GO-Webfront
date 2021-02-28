@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<!-- CSS only -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+	
+	<style>
+		table {
+		  margin-top: 50px;
+		}
+		.centered {
+		  position: fixed;
+		  left: 50%;
+		  margin-top: 150px;
+		  /* bring your own prefixes */
+		  transform: translate(-50%, -50%);
+		}
+	</style>
+
+</head>
+<body>
+	<div class="centered">
+		<div class="">
+		  <form method="POST" action="/">     
+		      <label>Message</label><input name="message" type="text" value="" />
+		      <input type="submit" value="submit" />
+		  </form>
+		  <div class="align-middle">
+			<table class="table">
+			  <tr>
+			    <th>Message</th>
+			    <th>Sentiment</th>
+			    <th>Weight</th>
+			  </tr>
+			  {{range .}}
+			    <tr>
+			 	  <td>{{.Message}}</td>
+			 	  <td>{{if eq .Score "POSITIVE"}}
+			 	  		<span>&#128175;</span>
+			 	  		{{.Score}}
+			 	  	  {{else if eq .Score "NEGATIVE"}}
+			 	  	  	<span>&#128577;</span>
+			 	  	  	{{.Score}}
+			 	  	  {{else}}
+			 	  	  	<span>&#128566;</span>
+			 	  	  	{{.Score}}
+			 	  	  {{end}}
+			 	  </td>
+			 	  <td>{{.Weight}}</td>
+			 	</tr>
+			  {{end}}
+			</table>
+		   </div>
+		</div>
+		
+	</div>
+</body>
+</html>
