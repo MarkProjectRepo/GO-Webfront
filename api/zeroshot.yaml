@@ -1,29 +1,7 @@
-# cluster.yaml
-
-# GKE cluster name
-cluster_name: cortex
-
-# GCP project ID
-project: velvety-dolphin-285817
-
-# GCP zone for your cluster
-zone: us-central1-a
-
-# instance type
-instance_type: e2-small
-
-# minimum number of instances
-min_instances: 1
-
-# maximum number of instances
-max_instances: 5
-
-# enable the use of preemptible instances
-preemptible: true
-
-# API load balancer scheme [internet-facing | internal]
-api_load_balancer_scheme: internet-facing
-
-# operator load balancer scheme [internet-facing | internal]
-# note: if using "internal", you must be within the cluster's VPC or configure VPC Peering to connect your CLI to your cluster operator
-operator_load_balancer_scheme: internet-facing
+- name: text-generator
+  kind: RealtimeAPI
+  predictor:
+    type: python
+    path: zeroshot.py
+  compute:
+          cpu: 40m

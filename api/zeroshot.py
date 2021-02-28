@@ -1,11 +1,8 @@
 from transformers import pipeline
 
-class Pipeline():
-
-	def __init__(self):
-		self.pipe = pipeline("zero-shot-classification")
-
+class PythonPredictor:
+	def __init__(self, config):
+            self.pipe = pipeline('sentiment-analysis')
 
 	def predict(self, payload):
-		classes = payload["classes"].split(",")
-		return self.pipe(payload["text"], classes)
+            return self.pipe(payload["text"], min_length=5, max_length=200)
