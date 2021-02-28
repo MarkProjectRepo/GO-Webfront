@@ -4,6 +4,7 @@ package main
 import (
     "fmt"
     "log"
+    "strconv"
     "io/ioutil"
     "bytes"
     "net/http"
@@ -18,14 +19,12 @@ type Sentiment struct {
 }
 
 type SentimentPageStruct struct {
-    sentiments []Sentiment
+    Sentiments []Sentiment
 }
 
-var responses []Sentiment
+var responses SentimentPageStruct
 
 func formHandler(w http.ResponseWriter, r *http.Request) {
-    
-
     if err := r.ParseForm(); err != nil {
         fmt.Fprintf(w, "ParseForm() err: %v", err)
         return
@@ -37,48 +36,69 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
         tmpl := template.Must(template.ParseFiles("static/form.html"))
 
         tmpl.Execute(w, responses)
-    }else {
-        values := map[string]string{"text": message}
-        jsonValue, _ := json.Marshal(values)
-        req, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
+        return
+    }
 
-        if err != nil {
-            log.Fatal( err )
-        }
+    values := map[string]string{"text": message}
+    jsonValue, _ := json.Marshal(values)
+    req, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
 
-        defer req.Body.Close()
+    if err != nil {
+        log.Fatal( err )
+    }
 
-        body, _ := ioutil.ReadAll(req.Body)
+    defer req.Body.Close()
 
-        var data []map[string]interface{}
+    body, _ := ioutil.ReadAll(req.Body)
 
-        err = json.Unmarshal(body, &data)
-        if err != nil {
-            log.Fatal( err )
-        }
+    var data []map[string]interface{}
 
-        if len(responses) > 20 {
-            responses = []Sentiment{Sentiment{Message: message, Score: data[0]["label"].(string), Weight: data[0]["score"].(float64)}}
-        }else{
-            responses = append(responses, Sentiment{Message: message, Score: data[0]["label"].(string), Weight: data[0]["score"].(float64)})
-        }
+    err = json.Unmarshal(body, &data)
+    if err != nil {
+        log.Fatal( err )
+    }
+    
+    responses.Sentiments = append(responses.Sentiments, Sentiment{Message: message, Score: data[0]["label"].(string), Weight: data[0]["score"].(float64)})
+    
+    if len(responses.Sentiments) > 5 {
+        responses.Sentiments = responses.Sentiments[1:]
+    }
 
-        if err := r.ParseForm(); err != nil {
-            fmt.Fprintf(w, "ParseForm() err: %v", err)
-            return
-        }
+    if err := r.ParseForm(); err != nil {
+        fmt.Fprintf(w, "ParseForm() err: %v", err)
+        return
+    }
 
+    tmpl := template.Must(template.ParseFiles("static/form.html"))
+
+    tmpl.Execute(w, responses)
+}
+
+func deletionHandler(w http.ResponseWriter, r *http.Request) {
+    r.ParseForm()
+
+    i, err := strconv.Atoi(r.Form["delete"][0])
+    if err != nil {
+        log.Fatal( err )
+    }
+
+    if (i > len(responses.Sentiments)) || (i < 0){
         tmpl := template.Must(template.ParseFiles("static/form.html"))
 
         tmpl.Execute(w, responses)
+        return
     }
+
+    responses.Sentiments = append(responses.Sentiments[:i], responses.Sentiments[i+1:]...)
+
+    tmpl := template.Must(template.ParseFiles("static/form.html"))
+
+    tmpl.Execute(w, responses)
 }
 
 func main() {
-    // fileServer := http.FileServer(http.Dir("./static"))
-    // http.Handle("/", fileServer)
     http.HandleFunc("/", formHandler)
-
+    http.HandleFunc("/delete", deletionHandler)
     fmt.Printf("Starting server at port 8080\n")
     log.Fatal(http.ListenAndServe(":8080", nil))
 }

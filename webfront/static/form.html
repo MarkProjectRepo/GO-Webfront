@@ -31,22 +31,26 @@
 			    <th>Message</th>
 			    <th>Sentiment</th>
 			    <th>Weight</th>
+			    <th></th>
 			  </tr>
-			  {{range .}}
+			  {{ range $index, $element := .Sentiments }}
 			    <tr>
-			 	  <td>{{.Message}}</td>
-			 	  <td>{{if eq .Score "POSITIVE"}}
+			 	  <td>{{$element.Message}}</td>
+			 	  <td>{{if eq $element.Score "POSITIVE"}}
 			 	  		<span>&#128175;</span>
-			 	  		{{.Score}}
-			 	  	  {{else if eq .Score "NEGATIVE"}}
+			 	  	  {{else if eq $element.Score "NEGATIVE"}}
 			 	  	  	<span>&#128577;</span>
-			 	  	  	{{.Score}}
 			 	  	  {{else}}
 			 	  	  	<span>&#128566;</span>
-			 	  	  	{{.Score}}
 			 	  	  {{end}}
+			 	  	  {{$element.Score}}
 			 	  </td>
-			 	  <td>{{.Weight}}</td>
+			 	  <td>{{$element.Weight}}</td>
+			 	  <td>
+			 	  	<form method="POST" action="/delete">
+			 	  		<button name="delete" type="submit" value="{{ $index }}" class="btn btn-danger">DELETE</button>
+				  </form>
+			 	  </td>
 			 	</tr>
 			  {{end}}
 			</table>
