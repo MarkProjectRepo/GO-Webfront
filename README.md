@@ -1,4 +1,4 @@
-# GO-GCP Webfront
+# Scalable Sentiment Demo
 Quick sentiment classification webfront with python and GO
 
 This was originally going to be a zero-shot classification, but I decided to go with sentiment for the sake of keeping it light.
